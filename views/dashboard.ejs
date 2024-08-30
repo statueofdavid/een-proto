@@ -1,5 +1,140 @@
 <html>
    <body>
-      Hello World!
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+.piechart {
+  width: 35%;
+  height: 25%;
+  border-radius: 50%;
+  background-image: conic-gradient(
+    red 70deg,
+    green 0 335deg,
+    yellow 0
+  );
+}
+
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  transition: 0.4s;
+}
+
+.active, .accordion:hover {
+  background-color: #ccc; 
+}
+
+.panel {
+  padding: 0 18px;
+  display: none;
+  background-color: white;
+  overflow: hidden;
+}
+</style>
+</head>
+      <h1>A Simple Report</h1>
+      <button>Run</button>
+      <div id="clock"></div>
+      <select name="zones" id="zones">
+        <option>moreOptions</option>
+        <option>moreFiller</option>
+        <option>thiswillbedynamic</option>
+      </select>
+      <h3>Total Runs</h3>
+      <h4>Passed</h4>
+      <h4>Failed</h4>
+      <h4>Check</h4>
+      <div class="piechart"></div>
+      <div class="browserOptions">
+        <label class="switch">Headless
+          <input type="checkbox">
+          <span class="slider"></span>
+        </label><br>
+        <label class="switch">Chromium
+          <input type="checkbox">
+          <span class="slider"></span>
+        </label><br>
+        <label class="switch">Safari
+          <input type="checkbox">
+          <span class="slider"></span>
+        </label><br>
+        <label class="switch">Firefox
+          <input type="checkbox">
+          <span class="slider"></span>
+        </label><br>
+        <label class="switch">Edge
+          <input type="checkbox">
+          <span class="slider"></span>
+        </label><br>
+        <input type="text" id="timeout" name="timeout" value="1000"><br>
+        <input type="text" id="sampleSize" name="sampleSize" value="100"><br>
+      </div>
+      <button class="accordion">BrowserObjectData Placeholder</button>
+<div class="panel">
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Title</th>
+      <th>Time</th>
+      <th>More Recent</th>
+    </tr>
+  </thead>
+</table>
+<button>Prev</button>
+<button>Next</button>
+</div>
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  });
+}
+
+setInterval(showTime, 1000);
+
+function showTime() {
+  let time = new Date();
+  let hour = time.getHours();
+  let min = time.getMinutes();
+  let sec = time.getSeconds();
+  am_pm = "AM";
+
+  if (hour >= 12) {
+      if (hour > 12) hour -= 12;
+      am_pm = "PM";
+  } else if (hour == 0) {
+      hr = 12;
+      am_pm = "AM";
+  }
+
+  hour = hour < 10 ? "0" + hour : hour;
+  min = min < 10 ? "0" + min : min;
+  sec = sec < 10 ? "0" + sec : sec;
+
+  let currentTime = hour + ":" + min + ":" + sec + am_pm;
+  document.getElementById("clock").innerHTML = currentTime;
+}
+
+showTime();
+</script>
    </body>
 </html>
