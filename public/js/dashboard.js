@@ -15,17 +15,19 @@ for (var i = 0; i < acc.length; i++) {
 var run = document.getElementById("run");
 
 run.onclick = function() {
-  var browserOptions = [];
+  var browserOptions = [
+    document.getElementById("headless").checked,
+    document.getElementById("chromium").checked,
+    document.getElementById("webkit").checked,
+    document.getElementById("headless").checked,
+    document.getElementById("headless").checked,
+    document.getElementById("mobileChrome").checked,
+    document.getElementById("mobileWebkit").checked
+  ];
+  var testOptions = [
+    document.getElementById("firstHundredDescendingAgeOrder").checked
+  ];
   
-  var isHeadless = document.getElementById("headless");
-  
-  var timeout = document.getElementById("timeout");
-  var sampleSize = document.getElementById("sampleSize");
-  
-  var chromium = document.getElementById("chromium");
-  var edge = document.getElementById("edge");
-  var firefox = document.getElementById("firefox");
-  var mobileChrome = document.getElementById("mobileChrome");
-  var mobileWebkit = document.getElementById("mobileWebkit");
-  var webkit = document.getElementById("webkit");
+  console.log(browserOptions);
+  console.log(testOptions);
 }
