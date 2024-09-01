@@ -1,2 +1,2 @@
-### A simple ejs integration with express
+### A simple dashboard for playwright results using node/express/ejs
 #### just learning
