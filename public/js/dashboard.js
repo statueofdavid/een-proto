@@ -13,9 +13,9 @@ for (var i = 0; i < acc.length; i++) {
 }
 
 var run = document.getElementById("run");
-
 run.onclick = function() {
-  var browserOptions = [
+  
+  var envConfig = [
     document.getElementById("headless").checked,
     document.getElementById("chromium").checked,
     document.getElementById("webkit").checked,
@@ -24,10 +24,14 @@ run.onclick = function() {
     document.getElementById("mobileChrome").checked,
     document.getElementById("mobileWebkit").checked
   ];
-  var testOptions = [
+
+  var tests = [
     document.getElementById("firstHundredDescendingAgeOrder").checked
   ];
   
-  console.log(browserOptions);
-  console.log(testOptions);
+  if(tests.filter((option) => !!option).length == 0) {
+    console.log('nothing to do');  
+  } else {
+    console.log(`envConfig: ${envConfig} :: tests: ${tests}`); 
+  }
 }
