@@ -14,24 +14,53 @@ for (var i = 0; i < acc.length; i++) {
 
 var run = document.getElementById("run");
 run.onclick = function() {
-  
-  var envConfig = [
-    document.getElementById("headless").checked,
-    document.getElementById("chromium").checked,
-    document.getElementById("webkit").checked,
-    document.getElementById("headless").checked,
-    document.getElementById("headless").checked,
-    document.getElementById("mobileChrome").checked,
-    document.getElementById("mobileWebkit").checked
-  ];
+  const testTitle = document.getElementById("trtitle");
+  const warningMsg = document.createElement("warningmsg");
+  const info = document.createTextNode('nothing to run, please check at least a test');
 
-  var tests = [
-    document.getElementById("firstHundredDescendingAgeOrder").checked
-  ];
+  warningMsg.appendChild(info);
   
-  if(tests.filter((option) => !!option).length == 0) {
-    console.log('nothing to do');  
+  const config = {
+    browserOptions: {
+      headless: document.getElementById("headless").checked,
+      google: document.getElementById("chromium").checked,
+      apple: document.getElementById("webkit").checked,
+      mozilla: document.getElementById("firefox").checked,
+      microsoft: document.getElementById("edge").checked,
+      android: document.getElementById("mobileChrome").checked,
+      ios: document.getElementById("mobileWebkit").checked
+    },
+    testOptions: {
+      FirstHundredDescendingAgeOrder: document.getElementById("firstHundredDescendingAgeOrder").checked
+    }
+  };
+  
+  if(Object.values(config.testOptions).every(option => !!option)) {
+    warningMsg.remove();
+    
+    const configJSON = JSON.stringify(config);
+
+    fetch('/tests', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: configJSON
+    })
+    .then(response => {
+      if(response.ok) {
+        response.json();
+      } else {
+        throw new Error(`Error fetching data: ${response.status} ${response.statusText}`);
+      }
+    })
+    .then(data => {
+      res.render('dashboard', { info: data });
+    })
+    .catch(error => {
+      console.error('Error running tests:', error);
+    });
   } else {
-    console.log(`envConfig: ${envConfig} :: tests: ${tests}`); 
+    document.body.insertBefore(newDiv, testTitle);
   }
 }
