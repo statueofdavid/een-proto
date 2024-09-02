@@ -45,15 +45,20 @@ run.onclick = function() {
     }
     
     const configJSON = JSON.stringify(config);
-    console.log(config);
+    //console.log(config);
+    //console.log(configJSON);
 
-    fetch('/tests', {
+    const options = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: configJSON
-    })
+    };
+
+    //console.log(options);
+
+    fetch('/tests', options)
     .then(response => {
       if(response.ok) {
         response.json();

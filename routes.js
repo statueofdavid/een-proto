@@ -2,20 +2,32 @@ const express = require('express');
 const router = express.Router();
 const test = require('./tests/firstHundredDescendingAgeOrder');
 
-router.post('/tests', (req, res) => {
-  console.log(req.body);
-  const config = JSON.parse(req.body);
-  console.log('I made it.');
+//console.log(test);
 
-  firstHundredDescendingAgeOrder(config)
-    .then(result => {
-      req.session.results = result;
-      res.redirect('/dashboard');
-    })
-    .catch(error => {
-      console.error('Error running tests:', error);
-      res.status(500).send('Internal server error');
-    });
+router.post('/tests', (req, res) => {
+  //console.log(req.body);
+  try {
+    const config = req.body;
+    //console.log(config);
+    (async () => {
+      try {	    
+        const result = await test(config);
+	console.log(result);
+        req.session.results = result;
+        res.redirect('/dashboard');
+      } catch(error) {
+        console.error('Error running tests:', error);
+      }
+    })();
+  } catch (error) {
+    if(error instanceof SyntaxError) {
+      console.error(error);
+      res.status(400).send(`${err.status} -> Bad Client`);
+    } else {
+      console.error(`rca maybe needed`);
+      res.status(500).send(`${err.status} -> Bad Server`);
+    }
+  }
 });
 
 router.get('/dashboard', async (req, res) =>  {

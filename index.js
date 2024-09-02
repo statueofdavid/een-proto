@@ -40,8 +40,24 @@ const port = 42000;
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use(express.static(__dirname + '/public'));
 app.use('/', routes);
+
+app.use(express.static(__dirname + '/public', {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.js')) {
+      res.set('Content-Type', 'application/javascript');
+    } else if (path.endsWith('.css')) {
+      res.set('Content-Type', 'text/css');
+    } else if (path.endsWith('.png')) {
+      res.set('Content-Type', 'image/png');
+    } else if (path.endsWith('.jpg')) {
+      res.set('Content-Type', 'image/jpeg');
+    } else if (path.endsWith('.ejs')) {
+      res.set('Content-Type', 'text/html');
+    }
+  }
+}));
+
 app.use((err, req, res, next) => {
   logger.error(err);
   

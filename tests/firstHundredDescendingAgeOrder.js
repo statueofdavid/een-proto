@@ -3,6 +3,8 @@ const { chromium } = require("playwright");
 const timeout = 1000;
 
 async function firstHundredDescendingAgeOrder(config) {
+  console.log(config);
+	
   // launch browser
   const browser = await chromium.launch({ 
     headless: false,
