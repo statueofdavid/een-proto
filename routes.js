@@ -3,6 +3,7 @@ const router = express.Router();
 const test = require('./tests/firstHundredDescendingAgeOrder');
 
 router.post('/tests', (req, res) => {
+  console.log(req.body);
   const config = JSON.parse(req.body);
   console.log('I made it.');
 
