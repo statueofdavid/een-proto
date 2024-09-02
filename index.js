@@ -1,5 +1,12 @@
 const ejs = require('ejs');
+
 const express = require('express');
+const session = require('express-session');
+const rateLimit = require('express-rate-limit');
+
+const helmet = require('helmet');
+const cors = require('cors');
+
 const logger = require('./utils/logger');
 const path = require('path');
 const routes = require('./routes');
@@ -10,6 +17,24 @@ if (!logger || !routes) {
 }
 
 const app = express();
+
+app.use(helmet());   
+app.use(cors());
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use(session({
+  secret: 'your-strong-secret-key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    secure: true, // Use HTTPS only
+    httpOnly: true,
+    maxAge: 600000 // 10 minutes
+  }
+}));
+
 const port = 42000;
 
 app.set('view engine', 'ejs');

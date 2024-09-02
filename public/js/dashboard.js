@@ -12,11 +12,14 @@ for (var i = 0; i < acc.length; i++) {
   });
 }
 
+let inserted = false;
+
 var run = document.getElementById("run");
 run.onclick = function() {
   const testTitle = document.getElementById("trtitle");
   const warningMsg = document.createElement("warningmsg");
   const info = document.createTextNode('nothing to run, please check at least a test');
+  const parentElement = testTitle.parentNode;
 
   warningMsg.appendChild(info);
   
@@ -36,9 +39,13 @@ run.onclick = function() {
   };
   
   if(Object.values(config.testOptions).every(option => !!option)) {
-    warningMsg.remove();
+    if(inserted) {
+      warningMsg.remove();
+      inserted = false;
+    }
     
     const configJSON = JSON.stringify(config);
+    console.log(config);
 
     fetch('/tests', {
       method: 'POST',
@@ -61,6 +68,9 @@ run.onclick = function() {
       console.error('Error running tests:', error);
     });
   } else {
-    document.body.insertBefore(newDiv, testTitle);
+    if(!inserted) {
+      parentElement.insertBefore(warningMsg, testTitle);
+      inserted = true;
+    }
   }
 }
