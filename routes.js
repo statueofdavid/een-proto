@@ -4,21 +4,14 @@ const test = require('./tests/firstHundredDescendingAgeOrder');
 
 //console.log(test);
 
-router.post('/tests', (req, res) => {
+router.post('/tests', async (req, res) => {
   //console.log(req.body);
   try {
     const config = req.body;
     //console.log(config);
-    (async () => {
-      try {	    
-        const result = await test(config);
-	console.log(result);
-        req.session.results = result;
-        res.redirect('/dashboard');
-      } catch(error) {
-        console.error('Error running tests:', error);
-      }
-    })();
+    const result = await test(config);
+    console.log(result); 
+    res.render('/dashboard', { results: result });
   } catch (error) {
     if(error instanceof SyntaxError) {
       console.error(error);

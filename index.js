@@ -29,9 +29,9 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    secure: true, // Use HTTPS only
+    secure: false,
     httpOnly: true,
-    maxAge: 600000 // 10 minutes
+    maxAge: 600000
   }
 }));
 
@@ -109,4 +109,3 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   console.log(`go to http://localhost:${port}/dashboard for visualization of results`);
 });
-

@@ -66,9 +66,6 @@ run.onclick = function() {
         throw new Error(`Error fetching data: ${response.status} ${response.statusText}`);
       }
     })
-    .then(data => {
-      res.render('dashboard', { info: data });
-    })
     .catch(error => {
       console.error('Error running tests:', error);
     });
