@@ -4,8 +4,7 @@ const timeout = 1000;
 
 async function firstHundredDescendingAgeOrder(config) {
   console.log(config);
-	
-  // launch browser
+
   const browser = await chromium.launch({ 
     headless: false,
     logger: {
@@ -17,65 +16,64 @@ async function firstHundredDescendingAgeOrder(config) {
     }
   });
 
-  const context = await browser.newContext();
-  const page = await context.newPage();
+  try {
+    const context = await browser.newContext();
+    const page = await context.newPage();
 
-  // go to Hacker News
-  await page.goto("https://news.ycombinator.com/newest");
+    await page.goto("https://news.ycombinator.com/latest", { waitUntil: "domcontentloaded" });
+    // await page.pause();
 
-  const titlelineSelector = 'span[class="titleline"]';
-  const ageSelector = 'span[class="age"]';
-  const moreSelector = 'a[class="morelink"]';
+    const titlelineSelector = 'span[class="titleline"]';
+    const ageSelector = 'span[class="age"]';
+    const moreSelector = 'a[class="morelink"]';
 
-  const more = await page.locator(moreSelector);
-  
-  let validationSample = [];
-  const validationLength = 100;
-  
-  while (validationSample.length < validationLength) {
-    const titles = await page.locator(titlelineSelector).allInnerTexts();
-    const ageElements = await page.locator(ageSelector).all();
-    const times = await Promise.all(ageElements.map(element => element.getAttribute('title')));
+    const validationSample = [];
+    const targetLength = 100;
+
+    while (validationSample.length < targetLength) {
+      const [titles, ageElements] = await Promise.all([
+        page.locator(titlelineSelector).allInnerTexts(),
+        page.locator(ageSelector).all(),
+      ]);
+
+      const times = await Promise.all(
+        ageElements.map((element) => element.getAttribute("title"))
+      );
+
+      const newData = titles.map((title, index) => ({
+	entry: validationSample.length + index + 1,
+        title,
+        time: times[index],
+        isValid: validationSample.length > 0
+          ? new Date(times[index]) <= new Date(validationSample[validationSample.length - 1].time)
+          : true,
+      }));
+
+      validationSample.push(...newData.slice(0, targetLength - validationSample.length));
+      if (validationSample.length >= targetLength) break;
+
+      if (await page.locator(moreSelector).isVisible()) {
+        await page.locator(moreSelector).click();
+        await page.waitForTimeout(timeout);
+      } else {
+        console.log("Reached end of page.");
+        break;
+      }
+    }
+    const passedEntries = validationSample.filter(item => item.isValid).length;
+    const failedEntries = validationSample.length - passedEntries;
+
+    console.log(validationSample);
+    console.log("Total entries:", validationSample.length);
     
-    const data = titles.map((title, index) => ({
-      title, 
-      time: times[index],
-      isValid: true
-    }));
-
-    for(let i = 0; i < data.length; i++) {
-     // console.log(`currently the sample is: ${validationSample} @ ${validationSample.length}`);
-
-     // console.log(`iterator #: ${i}`);
-      if(validationSample.length > 0) {
-        previousTime = new Date(validationSample[validationSample.length - 1].time);
-
-        const currentTime = new Date(data[i].time);
-        // console.log(`comparing ${previousTime} to ${currentTime}`);
-        data[i].isValid = currentTime <= previousTime;	
-        validationSample.push(data[i]);
-      } else { 
-        // console.log('nothing to validate, first item..');
-        validationSample.push(data[i]);
-      };
-    }
-
-
-    if((await more.isVisible()) && (validationSample.length < validationLength)) {
-      await more.click();
-      await page.waitForTimeout(timeout);
-    } else {
-      console.log("prepping the validation sample...");
-      break;
-    }
+    console.log("Passed:", passedEntries);
+    console.log("Failed:", failedEntries);
+  
+  } finally {
+    await context.close();
+    await browser.close();
   }
 
-  console.log(validationSample);
-
-  // Close browser and its context
-  await context.close();
-  await browser.close();
-  
   return validationSample;
 }
 

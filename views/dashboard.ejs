@@ -20,7 +20,20 @@
     </div>
     <div class="detail">
       <button class="accordion">BrowserObjectData Placeholder</button>
-      <%- include('panel'); %>
+      <div class="panel">  
+
+    <h2>Test Results</h2>
+    <ul>
+      <% results.forEach((results, index) => { %>
+        <li>
+          <strong>Result #<%= index + 1 %></strong>
+          <p>Title: <%= result.title %></p>
+          <p>Time: <%= result.time %></p>
+          <p>Valid: <%= result.isValid ? 'Yes' : 'No' %></p>
+        </li>
+      <% }); %>
+    </ul>
+  </div>
     </div>
     <script type="module" src="./js/dashboard.js"></script> 
   </body>
