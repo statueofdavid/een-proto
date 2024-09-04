@@ -1,23 +1,42 @@
 const { chromium } = require("playwright");
+const logger = require('./../utils/logger.js');
 
 const timeout = 1000;
 
 async function firstHundredDescendingAgeOrder(config) {
   console.log(config);
 
-  const browser = await chromium.launch({ 
-    headless: false,
-    logger: {
-      isEnabled: (_, severity) => true,
-      log: (name, severity, message, args) => {
-	const now = new Date();
-        console.log(`[${now.toISOString()}] ${severity} :: ${name} ${message}`);
-      }
-    }
-  });
+
+  const userAgents = [
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"];
+ 
+  const random = Math.random() * userAgents.length;
+  //console.log(random);
+  const userAgent = userAgents[random.toFixed()];
+  //console.log(userAgent);
 
   try {
-    const context = await browser.newContext();
+    const browser = await chromium.launch({
+      args: ['--disable-blink-features=AutomationControlled'],    
+      headless: false,
+      logger: {
+        isEnabled: (_, severity) => true,
+        log: (name, severity, message, args) => {
+	  const now = new Date();
+          console.log(`[${now.toISOString()}] ${severity} :: ${name} ${message}`);
+        }
+      }
+    });
+    logger.info(browser);
+
+    const context = await browser.newContext({
+      userAgent: userAgent,
+    });
+    logger.info(context);
+    
     const page = await context.newPage();
 
     await page.goto("https://news.ycombinator.com/latest", { waitUntil: "domcontentloaded" });
@@ -63,9 +82,10 @@ async function firstHundredDescendingAgeOrder(config) {
     const passedEntries = validationSample.filter(item => item.isValid).length;
     const failedEntries = validationSample.length - passedEntries;
 
-    console.log(validationSample);
+    logger.info(validationSample);
+    logger.info(`${validationSample.length}, ${passedEntries}, ${failedEntries}`); 
+
     console.log("Total entries:", validationSample.length);
-    
     console.log("Passed:", passedEntries);
     console.log("Failed:", failedEntries);
   

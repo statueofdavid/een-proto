@@ -12,9 +12,9 @@ router.post('/tests', async (req, res) => {
     const result = await test(config);
     console.log(`${result.toString()} ${result.length}`); 
     res.render('/dashboard', { results: result });
-  } catch (error) {
-    if(error instanceof SyntaxError) {
-      console.error(error);
+  } catch (err) {
+    if(err instanceof SyntaxError) {
+      console.error(err);
       res.status(400).send(`${err.status} -> Bad Client`);
     } else {
       console.error(`rca maybe needed`);
