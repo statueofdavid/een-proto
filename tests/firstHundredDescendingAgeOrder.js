@@ -1,7 +1,7 @@
 const { chromium } = require("playwright");
 const logger = require('./../utils/logger.js');
 
-const timeout = 1000;
+const timeout = 5000;
 
 async function firstHundredDescendingAgeOrder(config) {
   console.log(config);
@@ -30,16 +30,16 @@ async function firstHundredDescendingAgeOrder(config) {
         }
       }
     });
-    logger.info(browser);
+    logger.info(JSON.stringify(browser));
 
     const context = await browser.newContext({
       userAgent: userAgent,
     });
-    logger.info(context);
+    logger.info(JSON.stringify(context));
     
     const page = await context.newPage();
 
-    await page.goto("https://news.ycombinator.com/latest", { waitUntil: "domcontentloaded" });
+    await page.goto("https://news.ycombinator.com", { waitUntil: "domcontentloaded" });
     // await page.pause();
 
     const titlelineSelector = 'span[class="titleline"]';
@@ -82,7 +82,7 @@ async function firstHundredDescendingAgeOrder(config) {
     const passedEntries = validationSample.filter(item => item.isValid).length;
     const failedEntries = validationSample.length - passedEntries;
 
-    logger.info(validationSample);
+    logger.info(JSON.stringify(validationSample));
     logger.info(`${validationSample.length}, ${passedEntries}, ${failedEntries}`); 
 
     console.log("Total entries:", validationSample.length);
