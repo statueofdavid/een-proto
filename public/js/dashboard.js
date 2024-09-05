@@ -60,6 +60,7 @@ run.onclick = function() {
 
     fetch('/tests', options)
     .then(response => {
+      console.log(response);
       if(response.ok) {
         response.json();
       } else {
