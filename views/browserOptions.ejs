@@ -4,26 +4,19 @@
         <label class="headless">Headless
           <input type="checkbox" id="headless">
         </label><br>
-        <label class="slomo">Slow Down
-          <input type="checkbox" id="slowmo" name="slomo" checked>
-        </label><br>
         <label class="chromium">Chromium
           <input type="checkbox" id="chromium" checked>
-        </label><br>
-        <label class="mobileChrome">Pixel 5
-          <input type="checkbox" id="mobileChrome">
         </label><br>
         <label class="webkit">Webkit
           <input type="checkbox" id="webkit">
         </label><br>
-        <label class="mobileWebkit">iPhone 12
-          <input type="checkbox" id="mobileWebkit">
-        </label><br>
         <label class="firefox">Firefox
           <input type="checkbox" id="firefox">
         </label><br>
-        <label class="edge">Edge
-          <input type="checkbox" id="edge">
-        </label><br>
+	<% for (const device in knownDevices) { %>
+          <label class="<%= device %>"><%= device %>
+            <input type="checkbox" id="<%= device %>">
+          </label><br>
+        <% } %>
       </div>
 </html>

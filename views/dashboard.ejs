@@ -9,7 +9,7 @@
     <div class="configuration">
       <%- include('description'); %>
       <h2 id="aectitle">Available Environment Configurations</h2>
-      <%- include('browserOptions'); %>
+      <%- include('browserOptions', { knownDevices }); %>
       <h2 id="trtitle">Available Test Runs</h2>
       <%- include('testOptions'); %>
       <button id="run">Run</button>
@@ -24,12 +24,12 @@
 
     <h2>Test Results</h2>
     <ul>
-      <% results.forEach((results, index) => { %>
+      <% results.forEach((result, index) => { %>
         <li>
           <strong>Result #<%= index + 1 %></strong>
-          <p>Title: <%= results.title %></p>
-          <p>Time: <%= results.time %></p>
-          <p>Valid: <%= results.isValid ? 'Yes' : 'No' %></p>
+          <p>Title: <%= result.title %></p>
+          <p>Time: <%= result.time %></p>
+          <p>Valid: <%= result.isValid ? 'Yes' : 'No' %></p>
         </li>
       <% }); %>
     </ul>

@@ -1,4 +1,5 @@
-const logger = require('logger.js');
+const path = require('path');
+const logger = require(path.resolve(__dirname, 'logger.js'));
 
 const { chromium,
         webkit,
@@ -10,3 +11,5 @@ function createDeviceList() {
   logger.info(devices);
   return devices;
 }
+
+module.exports = createDeviceList;

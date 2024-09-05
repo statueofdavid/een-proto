@@ -1,7 +1,7 @@
 const winston = require('winston');
 const { DailyRotateFile } = require('winston-daily-rotate-file');
 
-const { combine, timestamp, label, json } = winston.format;
+const { combine, timestamp, label, json, metadata } = winston.format;
 const { Console, File } = winston.transports;
 
 const logger = winston.createLogger({
@@ -9,7 +9,8 @@ const logger = winston.createLogger({
   format: combine(
     timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
     label({ label: 'een-proto' }), 
-    json()
+    json(),
+    metadata()
   ),
   transports: [
     new Console({

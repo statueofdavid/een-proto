@@ -1,17 +1,16 @@
 const express = require('express');
-const router = express.Router();
 const test = require('./tests/firstHundredDescendingAgeOrder');
+const devices = require('./utils/availableDevices');
 
-//console.log(test);
+const router = express.Router();
+const knownDevices = devices();
 
 router.post('/tests', async (req, res) => {
-  //console.log(req.body);
   try {
     const config = req.body;
-    //console.log(config);
-    const result = await test(config);
+    const results = await test(config);
     console.log(result); 
-    res.render('/dashboard', { results: result });
+    res.render('dashboard', { results, knownDevices });
   } catch (err) {
     if(err instanceof SyntaxError) {
       console.error(err);
@@ -25,7 +24,7 @@ router.post('/tests', async (req, res) => {
 
 router.get('/dashboard', async (req, res) =>  {
   const results = req.session.results || [];
-  res.render('dashboard', { results });
+  res.render('dashboard', { results, knownDevices });
 });
 
 module.exports = router;

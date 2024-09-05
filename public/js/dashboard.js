@@ -29,9 +29,6 @@ run.onclick = function() {
       google: document.getElementById("chromium").checked,
       apple: document.getElementById("webkit").checked,
       mozilla: document.getElementById("firefox").checked,
-      microsoft: document.getElementById("edge").checked,
-      android: document.getElementById("mobileChrome").checked,
-      ios: document.getElementById("mobileWebkit").checked
     },
     testOptions: {
       FirstHundredDescendingAgeOrder: document.getElementById("firstHundredDescendingAgeOrder").checked

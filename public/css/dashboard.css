@@ -35,10 +35,9 @@ body {
   display: grid;
   grid-gap: 0.25em;
   grid-template-areas:
-    'headless chromium mobileChrome'
-    'slomo webkit mobileWebkit'
-    '. firefox .'
-    '. edge .';  
+    'headless chromium .'
+    '. webkit .'
+    '. firefox .';  
 }
 
 .testOptions {
