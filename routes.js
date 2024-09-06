@@ -10,7 +10,7 @@ router.post('/tests', async (req, res) => {
   try {
     const config = req.body;
     const results = await test(config);
-    console.log(result); 
+    console.log(results); 
     res.render('dashboard', { results, knownDevices });
   } catch (err) {
     if(err instanceof SyntaxError) {

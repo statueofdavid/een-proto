@@ -11,7 +11,6 @@ const ageSelector = 'span[class="age"]';
 const moreSelector = 'a[class="morelink"]';
 
 const timeout = 5000;
-const validationSample = [];
 const targetLength = 100;
 
 const userAgents = [
@@ -24,13 +23,13 @@ const random = Math.random() * userAgents.length;
 const userAgent = userAgents[random.toFixed()];
 
 async function firstHundredDescendingAgeOrder(config) {
-  
-  try {
-    const browsers = await getBrowsers(config);
-    logger.info(browsers);
+  const browsers = await getBrowsers(config);
+  logger.info(browsers);
     
-    for (const browser of browsers) {
-      console.log('no trouble');
+  for (const browser of browsers) {
+    console.log('no trouble');
+    
+    try { 
       const context = await browser.newContext({
         userAgent: userAgent,
       });
@@ -41,61 +40,69 @@ async function firstHundredDescendingAgeOrder(config) {
       await page.goto("https://news.ycombinator.com", { waitUntil: "domcontentloaded" });
       // await page.pause();
 
-      while (validationSample.length < targetLength) {
-        const [titles, ageElements] = await Promise.all([
-          page.locator(titlelineSelector).allInnerTexts(),
-          page.locator(ageSelector).all(),
-        ]);
+      //takes in page context, scrapes all UI elements, and validates order
+      const validatedSample = await validate(page);
+	
+      const passedEntries = validatedSample.filter(item => item.isValid).length;
+      const failedEntries = validatedSample.length - passedEntries;
 
-        const times = await Promise.all(
-          ageElements.map((element) => element.getAttribute("title"))
-        );
-
-        const newData = titles.map((title, index) => ({
-	  entry: validationSample.length + index + 1,
-          title,
-          time: times[index],
-          isValid: validationSample.length > 0
-            ? new Date(times[index]) <= new Date(validationSample[validationSample.length - 1].time)
-            : true,
-        }));
-
-          validationSample.push(...newData.slice(0, targetLength - validationSample.length));
-          if (validationSample.length >= targetLength) break;
-
-          if (await page.locator(moreSelector).isVisible()) {
-            await page.locator(moreSelector).click();
-            await page.waitForTimeout(timeout);
-          } else {
-            console.log("Reached end of page.");
-            break;
-          }
-        }
-        const passedEntries = validationSample.filter(item => item.isValid).length;
-        const failedEntries = validationSample.length - passedEntries;
-
-        logger.info(JSON.stringify(validationSample));
-        logger.info(`Entries: ${validationSample.length}, Passed: ${passedEntries}, Failed: ${failedEntries}`); 
-
-        console.log("Total entries:", validationSample.length);
-        console.log("Passed:", passedEntries);
-        console.log("Failed:", failedEntries);
+      logger.info(JSON.stringify(validatedSample));
+      logger.info(`Entries: ${validatedSample.length}, Passed: ${passedEntries}, Failed: ${failedEntries}`); 
+    
+      console.log("Total entries:", validatedSample.length);
+      console.log("Passed:", passedEntries);
+      console.log("Failed:", failedEntries);
       
-        await context.close();
-        await browser.close();
-     }
-  
-  } catch (error) {
-    if (error instanceof playwright.errors.TimeoutError) {
-      console.log('Timeout!');
-    } else {
-      console.log('dunno yet');
+    } catch (error) {
+      if (error instanceof playwright.errors.TimeoutError) {
+        console.log('Timeout!');
+      } else {
+        console.log('dunno yet');
+      }
+    } finally {
+      logger.info('did it work?');
+      
+      await context.close();
+      await browser.close();
     }
-  } finally {
-    logger.info('did it work?');
+  }
+  return validatedSample;
+}
+
+async function validate(page) {
+  const sample = [];
+  while (sample.length < targetLength) {
+    const [titles, ageElements] = await Promise.all([
+      page.locator(titlelineSelector).allInnerTexts(),
+      page.locator(ageSelector).all(),
+    ]);
+
+    const times = await Promise.all(
+      ageElements.map((element) => element.getAttribute("title"))
+    );
+
+    const newData = titles.map((title, index) => ({
+      entry: sample.length + index + 1,
+      title,
+      time: times[index],
+      isValid: sample.length > 0
+        ? new Date(times[index]) <= new Date(sample[sample.length - 1].time)
+        : true,
+    }));
+
+    sample.push(...newData.slice(0, targetLength - sample.length));
+    if (sample.length >= targetLength) break;
+
+    if (await page.locator(moreSelector).isVisible()) {
+      await page.locator(moreSelector).click();
+      await page.waitForTimeout(timeout);
+    } else {
+      console.log("Reached end of page.");
+      break;
+    }
   }
 
-  return validationSample;
+  return sample;
 }
 
 module.exports = firstHundredDescendingAgeOrder;
