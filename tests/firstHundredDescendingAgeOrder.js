@@ -12,6 +12,7 @@ const moreSelector = 'a[class="morelink"]';
 
 const timeout = 5000;
 const targetLength = 100;
+let validatedSample = [];
 
 const userAgents = [
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
@@ -23,25 +24,23 @@ const random = Math.random() * userAgents.length;
 const userAgent = userAgents[random.toFixed()];
 
 async function firstHundredDescendingAgeOrder(config) {
-  const browsers = await getBrowsers(config);
+  let browsers = await getBrowsers(config);
   logger.info(browsers);
     
   for (const browser of browsers) {
-    console.log('no trouble');
+    const context = await browser.newContext({
+      userAgent: userAgent,
+    });
+    logger.info(JSON.stringify(context));
     
     try { 
-      const context = await browser.newContext({
-        userAgent: userAgent,
-      });
-      logger.info(JSON.stringify(context));
     
       const page = await context.newPage();
 
       await page.goto("https://news.ycombinator.com", { waitUntil: "domcontentloaded" });
       // await page.pause();
 
-      //takes in page context, scrapes all UI elements, and validates order
-      const validatedSample = await validate(page);
+      validatedSample = await validate(page);
 	
       const passedEntries = validatedSample.filter(item => item.isValid).length;
       const failedEntries = validatedSample.length - passedEntries;
@@ -54,21 +53,17 @@ async function firstHundredDescendingAgeOrder(config) {
       console.log("Failed:", failedEntries);
       
     } catch (error) {
-      if (error instanceof playwright.errors.TimeoutError) {
-        console.log('Timeout!');
-      } else {
-        console.log('dunno yet');
-      }
+      logger.error(error);
     } finally {
-      logger.info('did it work?');
-      
       await context.close();
       await browser.close();
+      browsers = [];
     }
   }
   return validatedSample;
 }
 
+//takes in page context, scrapes all UI elements, and validates order
 async function validate(page) {
   const sample = [];
   while (sample.length < targetLength) {

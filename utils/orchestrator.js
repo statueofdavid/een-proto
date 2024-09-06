@@ -7,7 +7,7 @@ const { chromium,
 const path = require('path');
 const logger = require(path.resolve(__dirname, 'logger.js'));
 
-const browsers = [];
+let browsers = [];
 
 async function orchestrator(config) {
   console.log(config);
@@ -69,11 +69,12 @@ async function orchestrator(config) {
     console.log("browsers: " + browsers);
     
     logger.info(JSON.stringify(browsers));
+
+    return browsers;
   } catch (error) {
     logger.error(`failure to launch: ${error}`);
-  }
+  } finally { browsers = []; }
 
-  return browsers;
 }
 
 module.exports = orchestrator;

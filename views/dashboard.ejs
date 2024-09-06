@@ -6,14 +6,6 @@
     <link rel="stylesheet" type="text/css" href="./css/dashboard.css">
   </head>
   <body>
-    <div class="configuration">
-      <%- include('description'); %>
-      <h2 id="aectitle">Available Environment Configurations</h2>
-      <%- include('browserOptions', { knownDevices }); %>
-      <h2 id="trtitle">Available Test Runs</h2>
-      <%- include('testOptions'); %>
-      <button id="run">Run</button>
-    </div>
     <div class="overview">
       <%- include('basic'); %>
       <div class="piechart"></div>
@@ -34,6 +26,14 @@
       <% }); %>
     </ul>
   </div>
+    </div>
+    <div class="configuration">
+      <%- include('description'); %>
+      <h2 id="aectitle">Available Environment Configurations</h2>
+      <%- include('browserOptions', { knownDevices }); %>
+      <h2 id="trtitle">Available Test Runs</h2>
+      <%- include('testOptions'); %>
+      <button id="run">Run</button>
     </div>
     <script type="module" src="./js/dashboard.js"></script> 
   </body>

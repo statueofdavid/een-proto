@@ -56,14 +56,13 @@ run.onclick = function() {
     //console.log(options);
 
     fetch('/tests', options)
-    .then(response => {
-      console.log(response);
-      if(response.ok) {
-	console.log(response);
-        response.json();
-      } else {
-        throw new Error(`Error fetching data: ${response.status} ${response.statusText}`);
-      }
+    .then(res => res.text())
+    .then(html => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const newBody = doc.querySelector('html');
+
+      document.body.innerHTML = newBody.innerHTML;
     })
     .catch(error => {
       console.error('Error running tests:', error);
