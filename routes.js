@@ -1,6 +1,7 @@
 const express = require('express');
 const test = require('./tests/firstHundredDescendingAgeOrder');
 const devices = require('./utils/availableDevices');
+const logger = require('./utils/logger');
 
 const router = express.Router();
 const knownDevices = devices();
@@ -14,9 +15,11 @@ router.post('/tests', async (req, res) => {
   } catch (err) {
     if(err instanceof SyntaxError) {
       console.error(err);
+      logger.error(err);
       res.status(400).send(`${err.status} -> Bad Client`);
     } else {
       console.error(`rca maybe needed`);
+      logger.error(err);
       res.status(500).send(`${err.status} -> Bad Server`);
     }
   }

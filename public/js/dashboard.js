@@ -59,6 +59,7 @@ run.onclick = function() {
     .then(response => {
       console.log(response);
       if(response.ok) {
+	console.log(response);
         response.json();
       } else {
         throw new Error(`Error fetching data: ${response.status} ${response.statusText}`);
