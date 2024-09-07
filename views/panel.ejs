@@ -4,12 +4,22 @@
       <table>
         <thead>
           <tr>
-            <th>#</th>
-            <th>Title</th>
-            <th>Time</th>
-            <th>More Recent</th>
+            <th>Result #: </th>
+            <th>Title: </th>
+            <th>Time: </th>
+            <th>Valid: </th>
           </tr>
         </thead>
+	<tbody>
+        <% for (const result of results) { %>
+          <tr>
+            <td><%= result.entry %></td>
+            <td><%= result.title %></td>
+            <td><%= result.time %></td>
+            <td><%= result.isValid ? 'Yes' : 'No' %></td>
+          </tr>
+        <% } %>
+      </tbody>
        </table>
        <button>Prev</button>
        <button>Next</button>

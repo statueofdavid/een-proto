@@ -7,25 +7,14 @@
   </head>
   <body>
     <div class="overview">
-      <%- include('basic'); %>
+	    <%- include('basic', { results } ); %>
       <div class="piechart"></div>
     </div>
     <div class="detail">
       <button class="accordion">BrowserObjectData Placeholder</button>
-      <div class="panel">  
-
-    <h2>Test Results</h2>
-    <ul>
-      <% results.forEach((results, index) => { %>
-        <li>
-          <strong>Result #<%= index + 1 %></strong>
-          <p>Title: <%= results.title %></p>
-          <p>Time: <%= results.time %></p>
-          <p>Valid: <%= results.isValid ? 'Yes' : 'No' %></p>
-        </li>
-      <% }); %>
-    </ul>
-  </div>
+      <div class="panel">
+	<%- include('panel', { results } ); %>
+      </div>
     </div>
     <div class="configuration">
       <%- include('description'); %>

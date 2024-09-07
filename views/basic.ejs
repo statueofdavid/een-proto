@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
+    <% const passedEntries = results.filter(item => item.isValid).length; %>
+    <% const failedEntries = results.length - passedEntries; %>
+    <% const checkedEntries = 100 - results.length; %>
     <div class="basic">
-      <h3>Total Runs</h3>
-      <h4>Passed</h4>
-      <h4>Failed</h4>
-      <h4>Check</h4>
+      <h3>Total Runs: <%= results.length %></h3>
+      <h4>Passed: <%= passedEntries %></h4>
+      <h4>Failed: <%= failedEntries %></h4>
+      <h4>Check: <%= checkedEntries %></h4>
     </div>
 </html>

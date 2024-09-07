@@ -14,8 +14,8 @@ for (var i = 0; i < acc.length; i++) {
 
 let inserted = false;
 
-var run = document.getElementById("run");
-run.onclick = function() {
+const run = document.getElementById("run");
+run.addEventListener("click", () => {
   const testTitle = document.getElementById("trtitle");
   const warningMsg = document.createElement("warningmsg");
   const info = document.createTextNode('nothing to run, please check at least a test');
@@ -73,4 +73,4 @@ run.onclick = function() {
       inserted = true;
     }
   }
-}
+});

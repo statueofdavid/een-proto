@@ -8,9 +8,9 @@ body {
   display: grid;
   grid-gap: 1px;
   grid-template-areas:
-      'configuration'
       'overview'
-      'detail';
+      'detail'
+      'configuration';
 }
 
 .overview { 
