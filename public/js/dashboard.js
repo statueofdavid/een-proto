@@ -15,7 +15,17 @@ for (var i = 0; i < acc.length; i++) {
 let inserted = false;
 
 const run = document.getElementById("run");
-run.addEventListener("click", () => {
+run.addEventListener("click", getTestResults);
+
+const accordion = document.querySelector(".accordion");
+accordion.addEventListener("click", showDetails);
+
+function showDetails() {
+  const panel = document.querySelector('.panel');
+  panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+}
+
+function getTestResults() {
   const testTitle = document.getElementById("trtitle");
   const warningMsg = document.createElement("warningmsg");
   const info = document.createTextNode('nothing to run, please check at least a test');
@@ -62,7 +72,12 @@ run.addEventListener("click", () => {
       const doc = parser.parseFromString(html, 'text/html');
       const newBody = doc.querySelector('html');
 
-      document.body.innerHTML = newBody.innerHTML;
+      document.querySelector('html').innerHTML = newBody.innerHTML;
+      
+      document.querySelector('html').addEventListener('DOMContentLoaded', () => {
+        document.getElementById("run").addEventListener("click", handleRunButtonClick);
+        document.querySelector('.accordion').addEventListener('click', handleAccordionClick);
+      });
     })
     .catch(error => {
       console.error('Error running tests:', error);
@@ -73,4 +88,4 @@ run.addEventListener("click", () => {
       inserted = true;
     }
   }
-});
+};

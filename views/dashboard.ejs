@@ -18,11 +18,11 @@
     </div>
     <div class="configuration">
       <%- include('description'); %>
-      <h2 id="aectitle">Available Environment Configurations</h2>
-      <%- include('browserOptions', { knownDevices }); %>
       <h2 id="trtitle">Available Test Runs</h2>
       <%- include('testOptions'); %>
       <button id="run">Run</button>
+      <h2 id="aectitle">Available Environment Configurations</h2>
+      <%- include('browserOptions', { knownDevices }); %>
     </div>
     <script type="module" src="./js/dashboard.js"></script> 
   </body>

@@ -11,11 +11,6 @@ const logger = require('./utils/logger');
 const path = require('path');
 const routes = require('./routes');
 
-if (!logger || !routes) {
-  console.error('Error: Required modules not found.');
-  process.exit(1);
-}
-
 const app = express();
 
 app.use(helmet());   
@@ -59,46 +54,51 @@ app.use(express.static(__dirname + '/public', {
 }));
 
 app.use((err, req, res, next) => {
-  logger.error(err);
-  
   switch (err.status) {
     case 400: 
+      logger.error(err);
       res.status(400).render('error', {
         statusCode: err.status,
         message: 'Bad Request'
       });
       break;
     case 401: 
+      logger.error(err);
       res.status(401).render('error', { 
         statusCode: err.status,
         message: 'Unauthorized'
       });
       break;
     case 403: 
+      logger.error(err);
       res.status(403).render('error', {
 	statusCode: err.status,
 	message: 'Forbidden' 
       });
       break;
     case 404: 
+      logger.error(err);
       res.status(404).render('error', { 
 	statusCode: err.status,
 	message: 'Resource Not Found'
       });
       break;
     case 409: 
+      logger.error(err);
       res.status(409).render('error', {
 	statusCode: err.status,
 	message: 'Conflict'
       });
       break;
     case 500: 
+      logger.error(err);
       res.status(500).render('error', {
         statusCode: err.status,
 	message: 'Internal Server Error'
       });
       break;
     default:
+      logger.error(err);
       res.status(500).render('error', {
 	statusCode: err.status,
 	message: 'Unknown Error'
@@ -107,5 +107,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
+  logger.info(`${app}, ${port}`);
   console.log(`go to http://localhost:${port}/dashboard for visualization of results`);
 });
