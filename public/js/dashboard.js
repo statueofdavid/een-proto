@@ -3,12 +3,16 @@ let inserted = false;
 const run = document.getElementById("run");
 run.addEventListener("click", getTestResults);
 
-const accordion = document.getElementsByClassName("accordion");
+const accordion = document.querySelector(".accordion");
 accordion.addEventListener("click", showDetails);
 
 function showDetails() {
-  const panel = document.getElementByClassName('panel');
+  console.log('clicked');
+  const panel = document.querySelector('.panel');
   panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+  if (panel.style.display === 'block') {
+    console.log('more to come');
+  }
 }
 
 function getTestResults() {
@@ -59,11 +63,15 @@ function getTestResults() {
       const newBody = doc.querySelector('html');
 
       document.querySelector('html').innerHTML = newBody.innerHTML;
+
+      console.log('I am here');
       
-      document.querySelector('html').addEventListener('DOMContentLoaded', () => {
-        document.getElementById("run").addEventListener("click", handleRunButtonClick);
-        document.querySelector('.accordion').addEventListener('click', handleAccordionClick);
-      });
+	console.log('loaded, adding listeners');
+        document.getElementById('run').addEventListener("click", getTestResults );
+	console.log(run);
+        document.querySelector('.accordion').addEventListener('click', showDetails);
+	console.log(accordion);
+      console.log('but now I am over here');
     })
     .catch(error => {
       console.error('Error running tests:', error);
@@ -74,4 +82,4 @@ function getTestResults() {
       inserted = true;
     }
   }
-};
+}
