@@ -7,8 +7,10 @@
   </head>
   <body>
     <div class="overview">
-	    <%- include('basic', { results } ); %>
+      <%- include('description'); %>
+      <%- include('basic', { results } ); %>
       <div class="piechart"></div>
+      <%- include('runAction'); %>
     </div>
     <div class="detail">
       <button class="accordion">BrowserObjectData Placeholder</button>
@@ -17,10 +19,6 @@
       </div>
     </div>
     <div class="configuration">
-      <%- include('description'); %>
-      <h2 id="trtitle">Available Test Runs</h2>
-      <%- include('testOptions'); %>
-      <button id="run">Run</button>
       <h2 id="aectitle">Available Environment Configurations</h2>
       <%- include('browserOptions', { knownDevices }); %>
     </div>
