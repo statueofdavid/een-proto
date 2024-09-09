@@ -1,4 +1,18 @@
+const pageSize = 10;
+
 let inserted = false;
+let currentPage = 0;
+let totalPages = Math.ceil(results.length / pageSize);
+
+document.getElementById('prevButton').addEventListener('click', () => {
+  currentPage--;
+  updatePagination();
+});
+
+document.getElementById('nextButton').addEventListener('click', () => {
+  currentPage++;
+  updatePagination();
+});
 
 const run = document.getElementById("run");
 run.addEventListener("click", getTestResults);
@@ -8,10 +22,29 @@ accordion.addEventListener("click", showDetails);
 
 function showDetails() {
   console.log('clicked');
-  const panel = document.querySelector('.panel');
-  panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-  if (panel.style.display === 'block') {
+  const panels = document.querySelector('.panels');
+  panels.style.display = panels.style.display === 'block' ? 'none' : 'block';
+  if (panels.style.display === 'block') {
     console.log('more to come');
+    panels.style.height = '100vh';
+    document.querySelector('.panel').style.display = 'block';
+  }
+}
+
+function updatePagination() {
+  const prevButton = document.getElementById('prevButton');
+  const nextButton = document.getElementById('nextButton');
+
+  if (currentPage === 0) {
+    prevButton.disabled = true;
+  } else {
+    prevButton.disabled = false;
+  }
+
+  if (currentPage === totalPages - 1) {
+    nextButton.disabled = true;
+  } else {
+    nextButton.disabled = false;
   }
 }
 

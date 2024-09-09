@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="./css/dashboard.css">
+    <script type="module" src="./js/dashboard.js"></script> 
   </head>
   <body>
     <div class="overview">
@@ -14,14 +15,13 @@
     </div>
     <div class="detail">
       <button class="accordion">BrowserObjectData Placeholder</button>
-      <div class="panel">
-	<%- include('panel', { results } ); %>
+      <div class="panels">
+	<%- include('panel', { results, currentPage } ); %>
       </div>
     </div>
     <div class="configuration">
       <h2 id="aectitle">Available Environment Configurations</h2>
       <%- include('browserOptions', { knownDevices }); %>
     </div>
-    <script type="module" src="./js/dashboard.js"></script> 
   </body>
 </html>

@@ -11,19 +11,20 @@
           </tr>
         </thead>
 	<tbody>
-        <% for (const result of results) { %>
+	<% results.slice(currentPage * pageSize, (currentPage + 1) * pageSize).forEach(result => { %>
           <tr>
             <td><%= result.entry %></td>
             <td><%= result.title %></td>
             <td><%= result.time %></td>
             <td><%= result.isValid ? 'Yes' : 'No' %></td>
           </tr>
-        <% } %>
+        <% }); %>
       </tbody>
        </table>
-       <button>Prev</button>
-       <button>Next</button>
+         <div class="pagination">
+           <button id="prevButton" <%= currentPage === 0 ? 'disabled' : '' %>>Previous</button>
+           <button id="nextButton" <%= currentPage === totalPages - 1 ? 'disabled' : '' %>>Next</button>
+         </div>
      </div>
    </div>
-
 </html>
