@@ -37,7 +37,7 @@ async function firstHundredDescendingAgeOrder(config) {
     
       const page = await context.newPage();
 
-      await page.goto("https://news.ycombinator.com", { waitUntil: "domcontentloaded" });
+      await page.goto("https://news.ycombinator.com/newest", { waitUntil: "domcontentloaded" });
       // await page.pause();
 
       validatedSample = await validate(page);

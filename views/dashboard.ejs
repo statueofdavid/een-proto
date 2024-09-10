@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-9" />
+    <meta name="viewport" content="width=device-width, initial-scale=0">
     <link rel="stylesheet" type="text/css" href="./css/dashboard.css">
     <script type="module" src="./js/dashboard.js"></script> 
   </head>
   <body>
     <div class="overview">
       <%- include('description'); %>
-      <%- include('basic', { results } ); %>
+      <%- include('basic', { results }); %>
       <div class="piechart"></div>
       <%- include('runAction'); %>
     </div>
     <div class="detail">
       <button class="accordion">BrowserObjectData Placeholder</button>
       <div class="panels">
-	<%- include('panel', { results, currentPage } ); %>
+	<%- include('panel', { results }); %>
       </div>
     </div>
     <div class="configuration">
-      <h2 id="aectitle">Available Environment Configurations</h2>
+      <h1 id="aectitle">Available Environment Configurations</h2>
       <%- include('browserOptions', { knownDevices }); %>
     </div>
   </body>

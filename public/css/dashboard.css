@@ -109,7 +109,7 @@ body {
   padding: 0 18px;
   display: none;
   background-color: white;
-  overflow: hidden;
+  position: relative;
 }
 
 ul {list-style-type: none;}
