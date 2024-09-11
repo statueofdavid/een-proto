@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-9" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-2726c7f26c'">
     <meta name="viewport" content="width=device-width, initial-scale=0">
     <link rel="stylesheet" type="text/css" href="./css/dashboard.css">
     <script type="module" src="./js/dashboard.js"></script> 
@@ -10,7 +11,7 @@
     <div class="overview">
       <%- include('description'); %>
       <%- include('basic', { results }); %>
-      <div class="piechart"></div>
+      <%- include ('piechart', { results }); %>
       <%- include('runAction'); %>
     </div>
     <div class="detail">

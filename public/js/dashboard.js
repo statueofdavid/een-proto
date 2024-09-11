@@ -65,15 +65,8 @@ function getTestResults() {
       const newBody = doc.querySelector('html');
 
       document.querySelector('html').innerHTML = newBody.innerHTML;
-
-      console.log('I am here');
-      
-	console.log('loaded, adding listeners');
-        document.getElementById('run').addEventListener("click", getTestResults );
-	console.log(run);
-        document.querySelector('.accordion').addEventListener('click', showDetails);
-	console.log(accordion);
-      console.log('but now I am over here');
+      document.getElementById('run').addEventListener("click", getTestResults );
+      document.querySelector('.accordion').addEventListener('click', showDetails);
     })
     .catch(error => {
       console.error('Error running tests:', error);

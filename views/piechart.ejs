@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <div class='piechart'></div>
+  <script nonce='nonce-2726c7f26c'>
+  const chartElement = document.querySelector("piechart");
+
+  const data = <%= results %>;
+
+  const passedEntries = data.filter(item => item.isValid).length;
+  const failedEntries = data.length - passedEntries;
+
+  const skippedEntries = 100 - data.length;
+
+  const passedPercent = passedEntries / 100;
+  const failedPercent = failedEntries / 100;
+
+  const skippedPercent = skippedEntries / 100;
+
+  const passedSlice = passedPercent * 360;
+  const failedSlice = failedPercent * 360;
+
+  const skippedSlice = skippedPercent * 360;
+
+  const newGradient = `conic-gradient(
+    red ${failedSlice}deg,
+    yellow ${skippedSlice}deg,
+    green ${passedSlice}deg
+  )`;
+
+  chartElement.style.backgroundImage = newGradient;
+  </script>
+</html>
