@@ -17,6 +17,40 @@ function showDetails() {
   }
 }
 
+function updatePiechart() {
+  const chartElement = document.querySelector(".piechart");
+
+  fetch('/data')
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      console.log(chartElement);
+      
+      const passedEntries = data.filter(item => item.isValid).length;
+      const failedEntries = data.length - passedEntries;
+      const skippedEntries = 100 - data.length;
+
+      const passedPercent = passedEntries / 100;
+      const failedPercent = failedEntries / 100;
+      const skippedPercent = skippedEntries / 100;
+
+      const passedSection = passedPercent * 360;
+      const failedSection = failedPercent * 360;
+      const skippedSection = skippedPercent * 360;
+
+      const newGradient = `conic-gradient(
+        red ${failedSection}deg,
+	yellow ${skippedSection}deg,
+	green ${passedSection}deg
+      )`;
+
+      chartElement.style.backgroundImage = newGradient;
+    })
+    .catch(error => {
+      console.error('Error updating the piechart:', error);
+    });
+}
+
 function getTestResults() {
   const testTitle = document.getElementById("trtitle");
   const warningMsg = document.createElement("warningmsg");
@@ -67,6 +101,8 @@ function getTestResults() {
       document.querySelector('html').innerHTML = newBody.innerHTML;
       document.getElementById('run').addEventListener("click", getTestResults );
       document.querySelector('.accordion').addEventListener('click', showDetails);
+
+      updatePiechart();
     })
     .catch(error => {
       console.error('Error running tests:', error);

@@ -82,9 +82,9 @@ body {
   height: 85%;
   border-radius: 50%;
   background-image: conic-gradient(
-    red 70deg,
-    green 0 335deg,
-    yellow 0
+  transparent 0deg,
+  transparent 0deg,
+  transparent 0deg
   );
 }
 
