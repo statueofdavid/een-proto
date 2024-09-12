@@ -6,10 +6,13 @@ const logger = require('./utils/logger');
 const router = express.Router();
 const knownDevices = devices();
 
+let data = [];
+
 router.post('/tests', async (req, res) => {
   try {
     const config = req.body;
     const results = await test(config);
+    data = results;
     console.log(results); 
     res.render('dashboard', { results, knownDevices });
   } catch (err) {
@@ -28,6 +31,10 @@ router.post('/tests', async (req, res) => {
 router.get('/dashboard', async (req, res) =>  {
   const results = req.session.results || [];
   res.render('dashboard', { results, knownDevices });
+});
+
+router.get('/data', async (req, res) => {
+  res.json(data);
 });
 
 module.exports = router;
