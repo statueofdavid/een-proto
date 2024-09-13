@@ -30,18 +30,16 @@ function updatePiechart() {
       const failedEntries = data.length - passedEntries;
       const skippedEntries = 100 - data.length;
 
-      const passedPercent = passedEntries / 100;
       const failedPercent = failedEntries / 100;
       const skippedPercent = skippedEntries / 100;
 
-      const passedSection = passedPercent * 360;
-      const failedSection = failedPercent * 360;
-      const skippedSection = skippedPercent * 360;
-
+      let failedSection = failedPercent * 360;
+      let skippedSection = skippedPercent * 360;
+	    
       const newGradient = `conic-gradient(
-        red ${failedSection}deg,
-	yellow ${skippedSection}deg,
-	green ${passedSection}deg
+        red ${failedSection}deg ${skippedPercent}deg,
+        yellow ${failedSection}deg ${skippedSection}deg,
+        green ${skippedSection}deg ${failedSection}deg
       )`;
 
       chartElement.style.backgroundImage = newGradient;
