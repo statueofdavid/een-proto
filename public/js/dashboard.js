@@ -1,5 +1,7 @@
 let inserted = false;
 
+const dbName = "DashboardData";
+
 const run = document.getElementById("run");
 run.addEventListener("click", getTestResults);
 
@@ -7,11 +9,9 @@ const accordion = document.querySelector(".accordion");
 accordion.addEventListener("click", showDetails);
 
 function showDetails() {
-  console.log('clicked');
   const panels = document.querySelector('.panels');
   panels.style.display = panels.style.display === 'block' ? 'none' : 'block';
   if (panels.style.display === 'block') {
-    console.log('more to come');
     panels.style.height = '30vh';
     document.querySelector('.panel').style.display = 'block';
   }
@@ -23,8 +23,6 @@ function updatePiechart() {
   fetch('/data')
     .then(response => response.json())
     .then(data => {
-      console.log(data);
-      console.log(chartElement);
       
       const passedEntries = data.filter(item => item.isValid).length;
       const failedEntries = data.length - passedEntries;

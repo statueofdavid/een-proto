@@ -12,7 +12,8 @@ const moreSelector = 'a[class="morelink"]';
 
 const timeout = 5000;
 const targetLength = 100;
-let validatedSample = [];
+
+let runData = [];
 
 const userAgents = [
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
@@ -23,7 +24,7 @@ const userAgents = [
 const random = Math.random() * userAgents.length;
 const userAgent = userAgents[random.toFixed()];
 
-async function firstHundredDescendingAgeOrder(config) {
+async function environmentManager(config) {
   let browsers = await getBrowsers(config);
   logger.info(browsers);
     
@@ -32,26 +33,16 @@ async function firstHundredDescendingAgeOrder(config) {
       userAgent: userAgent,
     });
     logger.info(JSON.stringify(context));
-    
-    try { 
-    
-      const page = await context.newPage();
 
-      await page.goto("https://news.ycombinator.com/newest", { waitUntil: "domcontentloaded" });
-      // await page.pause();
+    try {
+      const testsToDo = config.testOptions.filter(item => item.checked).length;
+      if(testsToDo) {
+        //need to do more stuff, ugh and I am about to commit broken shit
+      }
 
-      validatedSample = await validate(page);
-	
-      const passedEntries = validatedSample.filter(item => item.isValid).length;
-      const failedEntries = validatedSample.length - passedEntries;
-
-      logger.info(JSON.stringify(validatedSample));
-      logger.info(`Entries: ${validatedSample.length}, Passed: ${passedEntries}, Failed: ${failedEntries}`); 
-    
-      console.log("Total entries:", validatedSample.length);
-      console.log("Passed:", passedEntries);
-      console.log("Failed:", failedEntries);
-      
+      runData.push(
+        await firstHundredDescendingAgeOrder(context)
+      );
     } catch (error) {
       logger.error(error);
     } finally {
@@ -60,6 +51,22 @@ async function firstHundredDescendingAgeOrder(config) {
       browsers = [];
     }
   }
+  return runData;
+}
+async function firstHundredDescendingAgeOrder(context) {
+      const page = await context.newPage();
+
+      await page.goto("https://news.ycombinator.com", { waitUntil: "domcontentloaded" });
+      // await page.pause();
+
+      const validatedSample = await validate(page);
+	
+      const passedEntries = validatedSample.filter(item => item.isValid).length;
+      const failedEntries = validatedSample.length - passedEntries;
+
+      logger.info(JSON.stringify(validatedSample));
+      logger.info(`Entries: ${validatedSample.length}, Passed: ${passedEntries}, Failed: ${failedEntries}`); 
+    
   return validatedSample;
 }
 
