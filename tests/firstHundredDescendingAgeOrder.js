@@ -36,11 +36,6 @@ async function environmentManager(config) {
     logger.info(JSON.stringify(context));
 
     try {
-      const testsToDo = config.testOptions.filter(item => item.checked).length;
-      if(testsToDo > 0) {
-	console.log("Don't forget me, you need to grab this data and give the dashboard access.");
-      }
-
       runData.push(
         await firstHundredDescendingAgeOrder(context)
       );

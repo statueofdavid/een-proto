@@ -3,7 +3,7 @@ let inserted = false;
 const dbName = "DashboardData";
 
 const run = document.getElementById("run");
-run.addEventListener("click", getTestResults);
+run.addEventListener("click", requestTestRun);
 
 const accordion = document.querySelector(".accordion");
 accordion.addEventListener("click", showDetails);
@@ -47,14 +47,15 @@ function updatePiechart() {
     });
 }
 
-function getTestResults() {
+function getConfigs() {
   const testTitle = document.getElementById("trtitle");
   const warningMsg = document.createElement("warningmsg");
+
   const info = document.createTextNode('nothing to run, please check at least a test');
   const parentElement = testTitle.parentNode;
 
   warningMsg.appendChild(info);
-  
+
   const config = {
     browserOptions: {
       headless: document.getElementById("headless").checked,
@@ -63,7 +64,7 @@ function getTestResults() {
       mozilla: document.getElementById("firefox").checked,
     },
     testOptions: {
-      document.getElementById("firstHundredDescendingAgeOrder"): document.getElementById("firstHundredDescendingAgeOrder").checked
+      "firstHundredDescendingAgeOrder": document.getElementById("firstHundredDescendingAgeOrder").checked,
     }
   };
   
@@ -72,41 +73,37 @@ function getTestResults() {
       warningMsg.remove();
       inserted = false;
     }
-    
     const configJSON = JSON.stringify(config);
-    //console.log(config);
-    //console.log(configJSON);
-
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: configJSON
-    };
-
-    //console.log(options);
-
-    fetch('/tests', options)
-    .then(res => res.text())
-    .then(html => {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, 'text/html');
-      const newBody = doc.querySelector('html');
-
-      document.querySelector('html').innerHTML = newBody.innerHTML;
-      document.getElementById('run').addEventListener("click", getTestResults );
-      document.querySelector('.accordion').addEventListener('click', showDetails);
-
-      updatePiechart();
-    })
-    .catch(error => {
-      console.error('Error running tests:', error);
-    });
+    
+    return configJSON;
   } else {
     if(!inserted) {
       parentElement.insertBefore(warningMsg, testTitle);
       inserted = true;
     }
-  }
+  }  
+}
+
+function requestTestRun() {
+  const envConfig = getConfigs();  
+
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: envConfig
+  };
+
+  fetch('/tests', options)
+  .then(res => {
+    if(res.status === 202) {
+      console.log(`request accepted`);
+    } else {
+      console.error(`request failed: ${res.status}`);
+    }
+  })
+  .catch(error => {
+    console.error(`Error running tests: ${error}`);
+  });
 }
