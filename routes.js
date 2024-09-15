@@ -13,8 +13,10 @@ router.post('/tests', async (req, res) => {
     const config = req.body;
     const results = await test(config);
 
+    const dataLink = 'https://localhost:42000/data';
+
     data = results;
-    res.status(202).send();
+    res.status(202).header('Link', `<${dataLink}>; rel="results"`).send('request accepted');
   } catch (err) {
     if(err instanceof SyntaxError) {
       logger.error(err);
