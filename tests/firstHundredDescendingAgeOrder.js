@@ -1,11 +1,8 @@
 const getBrowsers = require('./../utils/orchestrator.js');
 const logger = require('./../utils/logger.js');
 
-const random = Math.random() * userAgents.length;
 const targetLength = 100;
-
 const timeout = 5000;
-const userAgent = userAgents[random.toFixed()];
 
 const ageSelector = 'span[class="age"]';
 const moreSelector = 'a[class="morelink"]';
@@ -22,6 +19,9 @@ const userAgents = [
   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
   "Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"];
+
+const random = Math.random() * userAgents.length;
+const userAgent = userAgents[random.toFixed()];
 
 let runData = [];
 
@@ -42,7 +42,7 @@ async function environmentManager(config) {
       }
 
       runData.push(
-        await firstHundredDescendingAgeOrder(context);
+        await firstHundredDescendingAgeOrder(context)
       );
     } catch (error) {
       logger.error(error);

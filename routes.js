@@ -1,5 +1,5 @@
 const express = require('express');
-const test = require('./tests/environmentManager');
+const test = require('./tests/firstHundredDescendingAgeOrder');
 const devices = require('./utils/availableDevices');
 const logger = require('./utils/logger');
 
