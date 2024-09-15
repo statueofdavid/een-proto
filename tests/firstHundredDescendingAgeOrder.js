@@ -1,19 +1,21 @@
-const logger = require('./../utils/logger.js');
 const getBrowsers = require('./../utils/orchestrator.js');
+const logger = require('./../utils/logger.js');
+
+const random = Math.random() * userAgents.length;
+const targetLength = 100;
+
+const timeout = 5000;
+const userAgent = userAgents[random.toFixed()];
+
+const ageSelector = 'span[class="age"]';
+const moreSelector = 'a[class="morelink"]';
+const titlelineSelector = 'span[class="titleline"]';
+
 const { chromium, 
 	webkit, 
 	firefox,
 	devices
        } = require("playwright");
-
-const titlelineSelector = 'span[class="titleline"]';
-const ageSelector = 'span[class="age"]';
-const moreSelector = 'a[class="morelink"]';
-
-const timeout = 5000;
-const targetLength = 100;
-
-let runData = [];
 
 const userAgents = [
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
@@ -21,8 +23,7 @@ const userAgents = [
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
   "Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"];
 
-const random = Math.random() * userAgents.length;
-const userAgent = userAgents[random.toFixed()];
+let runData = [];
 
 async function environmentManager(config) {
   let browsers = await getBrowsers(config);
@@ -36,12 +37,12 @@ async function environmentManager(config) {
 
     try {
       const testsToDo = config.testOptions.filter(item => item.checked).length;
-      if(testsToDo) {
-        //need to do more stuff, ugh and I am about to commit broken shit
+      if(testsToDo > 0) {
+	console.log("Don't forget me, you need to grab this data and give the dashboard access.");
       }
 
       runData.push(
-        await firstHundredDescendingAgeOrder(context)
+        await firstHundredDescendingAgeOrder(context);
       );
     } catch (error) {
       logger.error(error);
@@ -107,4 +108,4 @@ async function validate(page) {
   return sample;
 }
 
-module.exports = firstHundredDescendingAgeOrder;
+module.exports = environmentManager;

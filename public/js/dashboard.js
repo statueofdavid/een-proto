@@ -63,7 +63,7 @@ function getTestResults() {
       mozilla: document.getElementById("firefox").checked,
     },
     testOptions: {
-      FirstHundredDescendingAgeOrder: document.getElementById("firstHundredDescendingAgeOrder").checked
+      document.getElementById("firstHundredDescendingAgeOrder"): document.getElementById("firstHundredDescendingAgeOrder").checked
     }
   };
   
