@@ -67,40 +67,39 @@ async function firstHundredDescendingAgeOrder(context) {
 }
 
 //takes in page context, scrapes all UI elements, and validates order
-async function validate(page) {
+async function* validate(page) {
   const sample = [];
   while (sample.length < targetLength) {
-    const [titles, ageElements] = await Promise.all([
-      page.locator(titlelineSelector).allInnerTexts(),
-      page.locator(ageSelector).all(),
-    ]);
+    const titles = await page.locator(titlelineSelector).allInnerTexts()
+    const ageElements = await page.locator(ageSelector).all();
 
-    const times = await Promise.all(
-      ageElements.map((element) => element.getAttribute("title"))
-    );
+    for await (const element of ageElements) {
+      const title = titles.shift();
+      const time = await element.getAttribute("title");
 
-    const newData = titles.map((title, index) => ({
-      entry: sample.length + index + 1,
-      title,
-      time: times[index],
-      isValid: sample.length > 0
-        ? new Date(times[index]) <= new Date(sample[sample.length - 1].time)
-        : true,
-    }));
+      const newData = {
+        entry: sample.length + index + 1,
+        title,
+        time,
+        isValid: sample.length > 0
+          ? new Date(time) <= new Date(sample[sample.length - 1].time)
+          : true,
+      };
 
-    sample.push(...newData.slice(0, targetLength - sample.length));
-    if (sample.length >= targetLength) break;
+      sample.push(newData);
+      if (sample.length >= targetLength) break;
+    }
 
     if (await page.locator(moreSelector).isVisible()) {
       await page.locator(moreSelector).click();
       await page.waitForTimeout(timeout);
     } else {
-      console.log("Reached end of page.");
+      logger.log("Reached end of page.");
       break;
     }
   }
 
-  return sample;
+  yield sample;
 }
 
 module.exports = environmentManager;
