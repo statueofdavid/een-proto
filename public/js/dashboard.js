@@ -8,6 +8,8 @@ run.addEventListener("click", requestTestRun);
 const accordion = document.querySelector(".accordion");
 accordion.addEventListener("click", showDetails);
 
+let dataEndpoint = '';
+
 function showDetails() {
   const panels = document.querySelector('.panels');
   panels.style.display = panels.style.display === 'block' ? 'none' : 'block';
@@ -20,7 +22,7 @@ function showDetails() {
 function updatePiechart() {
   const chartElement = document.querySelector(".piechart");
 
-  fetch('/data')
+  fetch(dataEndpoint)
     .then(response => response.json())
     .then(data => {
       
@@ -99,6 +101,8 @@ function requestTestRun() {
   .then(res => {
     if(res.status === 202) {
       console.log(`request accepted`);
+      dataEndpoint = res.headers.get('link');
+      console.log(`go to ${dataEndpoint} for payload`);
     } else {
       console.error(`request failed: ${res.status}`);
     }
