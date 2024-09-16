@@ -107,6 +107,22 @@ app.use((err, req, res, next) => {
   }
 });
 
+const memoryThreshold = 50000000; // 50 MB
+const cpuThreshold = 80; // 80% CPU usage
+
+setInterval(() => {
+  const memory = process.memoryUsage().heapUsed;
+  const cpu = process.cpuUsage().system / process.cpuUsage().user;
+
+  if (memory >= memoryThreshold) {
+    logger.warn(`Memory usage exceeded threshold: ${memory}`);
+  }
+
+  if (cpu >= cpuThreshold) {
+    logger.error(`CPU usage exceeded threshold: ${cpu}%`);
+  }
+}, 1000);
+
 process.on('uncaughtException', (err) => {
   logger.error(err);
   process.exit(1);
