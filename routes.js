@@ -10,6 +10,7 @@ let data = [];
 
 router.post('/tests', async (req, res) => {
   try {
+    logger.info('request to run tests');
     const config = req.body;
     const results = await test(config);
 
@@ -17,6 +18,7 @@ router.post('/tests', async (req, res) => {
 
     data = results;
     res.status(202).header('Link', `<${dataLink}>; rel="results"`).send('request accepted');
+    logger.info('202 response sent to requestor');
   } catch (err) {
     if(err instanceof SyntaxError) {
       logger.error(err);
@@ -28,10 +30,12 @@ router.post('/tests', async (req, res) => {
 
 router.get('/dashboard', async (req, res) =>  {
   const results = req.session.results || [];
+  logger.info('rendering dashboard')
   res.render('dashboard', { results, knownDevices });
 });
 
 router.get('/data', async (req, res) => {
+  logger.info('incoming request');
   res.json(data);
 });
 

@@ -10,7 +10,7 @@ const logger = require(path.resolve(__dirname, 'logger.js'));
 let browsers = [];
 
 async function orchestrator(config) {
-  console.log(config);
+  logger.info(config);
 
   try {
     if(config.browserOptions.google) {
@@ -68,7 +68,7 @@ async function orchestrator(config) {
     }
     console.log("browsers: " + browsers);
     
-    logger.info(JSON.stringify(browsers));
+    logger.info(browsers);
 
     return browsers;
   } catch (error) {

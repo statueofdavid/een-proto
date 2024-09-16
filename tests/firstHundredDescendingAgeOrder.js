@@ -25,7 +25,7 @@ const userAgent = userAgents[random.toFixed()];
 
 let runData = [];
 
-async function* environmentManager(config) {
+async function environmentManager(config) {
   let browsers = await getBrowsers(config);
   logger.info(browsers);
     
@@ -36,9 +36,7 @@ async function* environmentManager(config) {
     logger.info(JSON.stringify(context));
 
     try {
-      runData.push(
-        yield await firstHundredDescendingAgeOrder(context)
-      );
+       runData = await firstHundredDescendingAgeOrder(context);
     } catch (error) {
       logger.error(error);
     } finally {
@@ -56,10 +54,10 @@ async function firstHundredDescendingAgeOrder(context) {
   await page.goto("https://news.ycombinator.com", { waitUntil: "domcontentloaded" });
   // await page.pause();
 
-  const validatedSample = await validate(page);
-
-  logger.info(JSON.stringify(validatedSample));
-  return validatedSample;
+  for await (const validatedSample of validate(page)) {
+    logger.info(JSON.stringify(validatedSample));
+    return validatedSample;
+  };
 }
 
 //takes in page context, scrapes all UI elements, and validates order
@@ -74,7 +72,7 @@ async function* validate(page) {
       const time = await element.getAttribute("title");
 
       const newData = {
-        entry: sample.length + index + 1,
+        entry: sample.length + 1,
         title,
         time,
         isValid: sample.length > 0
