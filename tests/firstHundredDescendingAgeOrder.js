@@ -49,20 +49,16 @@ async function environmentManager(config) {
   }
   return runData;
 }
+
 async function firstHundredDescendingAgeOrder(context) {
-      const page = await context.newPage();
+  const page = await context.newPage();
 
-      await page.goto("https://news.ycombinator.com", { waitUntil: "domcontentloaded" });
-      // await page.pause();
+  await page.goto("https://news.ycombinator.com", { waitUntil: "domcontentloaded" });
+  // await page.pause();
 
-      const validatedSample = await validate(page);
-	
-      const passedEntries = validatedSample.filter(item => item.isValid).length;
-      const failedEntries = validatedSample.length - passedEntries;
+  const validatedSample = await validate(page);
 
-      logger.info(JSON.stringify(validatedSample));
-      logger.info(`Entries: ${validatedSample.length}, Passed: ${passedEntries}, Failed: ${failedEntries}`); 
-    
+  logger.info(JSON.stringify(validatedSample));
   return validatedSample;
 }
 
@@ -85,6 +81,7 @@ async function* validate(page) {
           ? new Date(time) <= new Date(sample[sample.length - 1].time)
           : true,
       };
+      console.log(`what is this: ${newData}`);
 
       sample.push(newData);
       if (sample.length >= targetLength) break;
