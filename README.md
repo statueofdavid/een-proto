@@ -5,7 +5,11 @@
 //TODO
 
 #### Installation
-//TODO
+1. install node and npm
+2. clone this repo
+3. run: ```npm install```
+4. run: ```node index```
+5. follow the instructions in runtime console
 
 #### proposed object
 {
