@@ -1,3 +1,4 @@
+const proces = require('process');
 const ejs = require('ejs');
 
 const express = require('express');
@@ -104,6 +105,11 @@ app.use((err, req, res, next) => {
 	message: 'Unknown Error'
       });
   }
+});
+
+process.on('uncaughtException', (err) => {
+  logger.error(err);
+  process.exit(1);
 });
 
 app.listen(port, () => {
