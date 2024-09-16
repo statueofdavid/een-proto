@@ -92,7 +92,8 @@ function requestTestRun() {
   const options = {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-request-id: uuidv4()
     },
     body: envConfig
   };
@@ -101,8 +102,25 @@ function requestTestRun() {
   .then(res => {
     if(res.status === 202) {
       console.log(`request accepted`);
+      const requestId = res.headers.get('x-request-id');
+
       dataEndpoint = res.headers.get('link');
-      console.log(`go to ${dataEndpoint} for payload`);
+      console.log(`go to ${dataEndpoint} to observe payload`);
+
+      const wsUrl = new URL(dataEndpoint).origin.place('http','ws');
+      const socket = new WebSocket(wsUrl);
+
+      socket.onopen = () => {
+        socket.send(JSON.stringify({ type: 'run', requestId }));
+      };
+
+      socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+	if (data.type == 'results') {
+          updateDashboard(data.data);
+	  socket.close();
+	}
+      };
     } else {
       console.error(`request failed: ${res.status}`);
     }
