@@ -25,7 +25,7 @@ const userAgent = userAgents[random.toFixed()];
 
 let runData = [];
 
-async function environmentManager(config) {
+async function* environmentManager(config) {
   let browsers = await getBrowsers(config);
   logger.info(browsers);
     
@@ -37,7 +37,7 @@ async function environmentManager(config) {
 
     try {
       runData.push(
-        await firstHundredDescendingAgeOrder(context)
+        yield await firstHundredDescendingAgeOrder(context)
       );
     } catch (error) {
       logger.error(error);
