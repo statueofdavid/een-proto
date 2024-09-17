@@ -1,18 +1,23 @@
-const proces = require('process');
+const cors = require('cors');
 const ejs = require('ejs');
+const helmet = require('helmet');
+
+const http = require('http');
+const process = require('process');
 
 const express = require('express');
 const session = require('express-session');
 const rateLimit = require('express-rate-limit');
 
-const helmet = require('helmet');
-const cors = require('cors');
 
 const logger = require('./utils/logger');
 const path = require('path');
 const routes = require('./routes');
 
+const websocketServer = require('./utils/websocket');
+
 const app = express();
+const server = http.createServer(app);
 
 app.use(helmet());   
 app.use(cors());
@@ -21,7 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
-  secret: 'your-strong-secret-key',
+  secret: 'my-super-strong-secret-key',
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -32,6 +37,7 @@ app.use(session({
 }));
 
 const port = 42000;
+const socket = 42420;
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -128,7 +134,11 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
+server.listen(socket, () => {
+  logger.info(`${JSON.stringify(server)}, ${socket}`);
+});
+
 app.listen(port, () => {
-  logger.info(`${app}, ${port}`);
+  logger.info(`${JSON.stringify(app)}, ${port}`);
   console.log(`go to http://localhost:${port}/dashboard for visualization of results`);
 });

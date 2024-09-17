@@ -1,5 +1,3 @@
-let inserted = false;
-
 const dbName = "DashboardData";
 
 const run = document.getElementById("run");
@@ -9,6 +7,7 @@ const accordion = document.querySelector(".accordion");
 accordion.addEventListener("click", showDetails);
 
 let dataEndpoint = '';
+let inserted = false;
 
 function showDetails() {
   const panels = document.querySelector('.panels');
@@ -88,12 +87,13 @@ function getConfigs() {
 
 function requestTestRun() {
   const envConfig = getConfigs();  
+  const token = crypto.randomUUID();
 
   const options = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-request-id: uuidv4()
+      'x-request-id': token
     },
     body: envConfig
   };
@@ -104,22 +104,27 @@ function requestTestRun() {
       console.log(`request accepted`);
       const requestId = res.headers.get('x-request-id');
 
-      dataEndpoint = res.headers.get('link');
+      dataEndpoint = res.headers.get('link').trim();
       console.log(`go to ${dataEndpoint} to observe payload`);
-
-      const wsUrl = new URL(dataEndpoint).origin.place('http','ws');
-      const socket = new WebSocket(wsUrl);
+      // Establish a WebSocket connection
+      const socket = new WebSocket(dataEndpoint);
 
       socket.onopen = () => {
-        socket.send(JSON.stringify({ type: 'run', requestId }));
+        console.log('WebSocket connection opened');
+        socket.send(JSON.stringify({ type: 'run_tests', requestId }));
       };
 
       socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
-	if (data.type == 'results') {
+        if (data.type === 'test_results') {
+          // Update the dashboard with the results
           updateDashboard(data.data);
-	  socket.close();
-	}
+          socket.close();
+        }
+      };
+
+      socket.onclose = () => {
+        console.log('WebSocket connection closed');
       };
     } else {
       console.error(`request failed: ${res.status}`);

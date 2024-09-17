@@ -1,46 +1,36 @@
-import webSocket = require('ws');
+const http = require('http');
 const path = require('path');
 const logger = require(path.resolve(__dirname, 'logger.js'));
 
-const wss = new webSocket.Server({
-  port: 424200,
-  backlog: 100,
-  pingInverval: 5000,
-  pongInverval: 10000,
-  extensions: [{
-    name: 'permessage-deflate',
-    params: {
-      serverMaxWindowBits: 15,
-      clientMaxWindowsBits: 15
-    }
-  }]
-});
+const server = http.createServer();
 
-wss.on('connection', (ws, req) => {
-  logger.info('Client connected:', req.socket.remoteAddress);
+let numConnections = 0;
+let messagesSent = 0;
+let messagesReceived = 0;
+let errors = 0;
+
+  server.on('upgrade', (req, socket, head) => {
+    const ws = new WebSocket(req, socket, head);
+    logger.info('server upgraded: ', ws);
+
 
   ws.on('message', (message) => {
     try {
-      const data = JSON.parse(message);
-      logger.info('Received message:', data);
-      wss.clients.forEach((client) => {
-        if (client !== ws && client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(data));
-        }
-      });
+      logger.info('Received message');
+
     } catch (error) {
-      logger.error('Error parsing message:', error);
+      console.error('Error parsing message:', error);
       ws.send('Invalid message format');
     }
   });
 
   ws.on('error', (error) => {
-    logger.error('WebSocket error:', error);
+    console.error('WebSocket error:', error);
   });
 
   ws.on('close', () => {
-    logger.info('WebSocket connection closed');
+    clearInterval('1000');
   });
 });
 
-module.exports = wss;
+module.exports = server;
