@@ -1,14 +1,13 @@
-const constants = require('./utils/constants');
-const cors = require('cors');
 
+const cors = require('cors');
 const ejs = require('ejs');
 const helmet = require('helmet');
 
 const http = require('http');
 const process = require('process');
 
-const express = require('express');
-const session = require('express-session');
+const router = require('express');
+const sessionManager = require('express-session');
 const rateLimit = require('express-rate-limit');
 
 const logger = require('./utils/logger');
@@ -17,38 +16,51 @@ const routes = require('./routes');
 
 const websocketServer = require('./utils/websocket');
 
-const app = express();
+const { 
+  compute,
+  net,
+  store,
+  compute: { 
+    express, 
+    express: { 
+      session 
+    }
+  }
+}  = require('./utils/constants');
+
+
+const app = router();
 const server = http.createServer(app);
 
 app.use(helmet());   
 app.use(cors());
-app.use(express.json());
+app.use(router.json());
 
 app.use(
-  express.urlencoded({ 
-    extended: constants.compute.express.URLENCODED_EXTENDED
+  router.urlencoded({ 
+    extended: express.URLENCODED_EXTENDED
 }));
 
-app.use(session({
-  secret: constants.compute.express.session.SECRET,
-  resave: constants.compute.express.session.RESAVE,
-  saveUninitialized: constants.compute.express.session.SAVE_UNINITIALIZED,
+app.use(sessionManager({
+  secret: session.SECRET,
+  resave: session.RESAVE,
+  saveUninitialized: session.SAVE_UNINITIALIZED,
   cookie: {
-    secure: constants.compute.express.session.cookie.SECURE,
-    httpOnly: constants.compute.express.session.cookie.HTTP_ONLY,
-    maxAge: constants.compute.express.session.cookie.MAX_AGE
+    secure: session.cookie.SECURE,
+    httpOnly: session.cookie.HTTP_ONLY,
+    maxAge: session.cookie.MAX_AGE
   }
 }));
 
-const port = constants.net.HTTP_PORT;
-const socket = constants.net.SOCKET_PORT;
+const port = net.HTTP_PORT;
+const socket = net.SOCKET_PORT;
 
-app.set('view engine', constants.compute.express.VIEW_ENGINE);
-app.set('views', path.join(__dirname, constants.compute.express.VIEWS_DIR));
+app.set('view engine', express.VIEW_ENGINE);
+app.set('views', path.join(__dirname, express.VIEWS_DIR));
 
 app.use('/', routes);
 
-app.use(express.static(__dirname + '/public', {
+app.use(router.static(__dirname + '/public', {
   setHeaders: (res, path) => {
     if (path.endsWith('.js')) {
       res.set('Content-Type', 'application/javascript');
@@ -117,8 +129,8 @@ app.use((err, req, res, next) => {
   }
 });
 
-const memoryThreshold = constants.compute.MEM_THRESH;;
-const cpuThreshold = constants.compute.CPU_THRESH;
+const memoryThreshold = compute.MEM_THRESH;;
+const cpuThreshold = compute.CPU_THRESH;
 
 setInterval(() => {
   const memory = process.memoryUsage().heapUsed;

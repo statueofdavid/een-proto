@@ -39,11 +39,11 @@ const constants = {
       NAME: "een-proto",
       LEVEL: "info",
       FILENAME: "./logs/%DATE%.log",
-      MAX_SIZE: 20,
-      MAX_FILES: 14,
+      MAX_SIZE: "20m",
+      MAX_FILES: "14",
       ZIPPED_ARCHIVE: true
     }
   }
-}
+};
 
 module.exports = constants;

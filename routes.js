@@ -6,13 +6,21 @@ const logger = require('./utils/logger');
 const netPerformanceMetrics = require('./utils/netPerf');
 const webSocketServer = require('./utils/websocket')
 
+const {
+  net,
+  net: {
+    routes: { dashboard },
+    routes: { uitests }
+  }
+} = require('./utils/constants');
+
 const router = express.Router();
 const knownDevices = devices();
 
 let data = [];
 
 router.get('/dashboard', async (req, res) =>  {
-  const thershold = 500;
+  const thershold = dashboard.NET_PERF_THRESH;
   const start = performance.now();
   const results = req.session.results || [];
   
@@ -25,14 +33,14 @@ router.get('/dashboard', async (req, res) =>  {
 
 router.post('/tests', async (req, res) => {
   try {
-    const thershold = 25000;
+    const thershold = uitests.NET_PERF_THRESH;
     const start = performance.now();
 
     logger.info(`request to run tests ${start}`);
     const config = req.body;
     const results = await test(config);
 
-    const dataLink = 'http://localhost:42000/data';
+    const dataLink = `http://${net.HOST}:${net.HTTP_PORT}/data`;
 
     data = results;
 
@@ -52,7 +60,7 @@ router.post('/tests', async (req, res) => {
 });
 
 router.get('/data', async (req, res) => {
-  const thershold = 500;
+  const thershold = dashboard.NET_PERF_THRESH;
   const start = performance.now();
   
   logger.info('incoming request');

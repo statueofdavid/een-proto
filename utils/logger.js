@@ -4,11 +4,14 @@ const { DailyRotateFile } = require('winston-daily-rotate-file');
 const { combine, timestamp, label, json, metadata } = winston.format;
 const { Console, File } = winston.transports;
 
+const path = require('path');
+const { store: { logs } } = require(path.resolve(__dirname, 'constants.js'));
+
 const logger = winston.createLogger({
   level: 'info',
   format: combine(
-    timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-    label({ label: 'een-proto' }), 
+    timestamp({ format: logs.DATE + logs.TIME }),
+    label({ label: logs.NAME }), 
     json(),
     metadata()
   ),
@@ -18,11 +21,11 @@ const logger = winston.createLogger({
       level: 'info'
     }),
     new winston.transports.DailyRotateFile({
-      filename: './logs/%DATE%.log', 
-      datePattern: 'YYYY-MM-DD',
-      maxSize: '20m',
-      maxFiles: '14',
-      zippedArchive: true
+      filename: logs.FILENAME, 
+      datePattern: logs.DATE,
+      maxSize: logs.MAX_SIZE,
+      maxFiles: logs.MAX_FILES,
+      zippedArchive: logs.ZIPPED_ARCHIVE
     })
   ]
 });
