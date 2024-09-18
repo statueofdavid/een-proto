@@ -1,4 +1,3 @@
-
 const cors = require('cors');
 const ejs = require('ejs');
 const helmet = require('helmet');
@@ -14,7 +13,7 @@ const logger = require('./utils/logger');
 const path = require('path');
 const routes = require('./routes');
 
-const websocketServer = require('./utils/websocket');
+const server = require('./utils/websocket');
 
 const { 
   compute,
@@ -28,9 +27,7 @@ const {
   }
 }  = require('./utils/constants');
 
-
 const app = router();
-const server = http.createServer(app);
 
 app.use(helmet());   
 app.use(cors());
@@ -52,8 +49,7 @@ app.use(sessionManager({
   }
 }));
 
-const port = net.HTTP_PORT;
-const socket = net.SOCKET_PORT;
+const port = net.PORT;
 
 app.set('view engine', express.VIEW_ENGINE);
 app.set('views', path.join(__dirname, express.VIEWS_DIR));
@@ -150,8 +146,8 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-server.listen(socket, () => {
-  logger.info(`${JSON.stringify(server)}, ${socket}`);
+server.listen(port, () => {
+  logger.info(`${JSON.stringify(server)}, ${port}`);
 });
 
 app.listen(port, () => {

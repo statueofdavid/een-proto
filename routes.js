@@ -40,7 +40,7 @@ router.post('/tests', async (req, res) => {
     const config = req.body;
     const results = await test(config);
 
-    const dataLink = `http://${net.HOST}:${net.HTTP_PORT}/data`;
+    const dataLink = `ws://${net.HOST}:${net.PORT}/data`;
 
     data = results;
 

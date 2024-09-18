@@ -2,8 +2,7 @@ const constants = {
   net: {
     IP: "127.0.0.1",
     HOST: "localhost",
-    HTTP_PORT: 42000,
-    SOCKET_PORT: 42420,
+    PORT: 42420,
     routes: {
       dashboard: {
         NET_PERF_THRESH: 500 

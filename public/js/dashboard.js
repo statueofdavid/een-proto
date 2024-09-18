@@ -123,6 +123,10 @@ function requestTestRun() {
         }
       };
 
+      socket.onerror = (event) => {
+        console.error('WebSocket connection error:', event);
+      }
+
       socket.onclose = () => {
         console.log('WebSocket connection closed');
       };

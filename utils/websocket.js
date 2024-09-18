@@ -1,6 +1,7 @@
 const http = require('http');
 const path = require('path');
 const logger = require(path.resolve(__dirname, 'logger.js'));
+const WebSocket = require('ws');
 
 const server = http.createServer();
 
