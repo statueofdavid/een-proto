@@ -1,4 +1,6 @@
+const constants = require('./utils/constants');
 const cors = require('cors');
+
 const ejs = require('ejs');
 const helmet = require('helmet');
 
@@ -8,7 +10,6 @@ const process = require('process');
 const express = require('express');
 const session = require('express-session');
 const rateLimit = require('express-rate-limit');
-
 
 const logger = require('./utils/logger');
 const path = require('path');
@@ -21,26 +22,29 @@ const server = http.createServer(app);
 
 app.use(helmet());   
 app.use(cors());
-
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  express.urlencoded({ 
+    extended: constants.compute.express.URLENCODED_EXTENDED
+}));
 
 app.use(session({
-  secret: 'my-super-strong-secret-key',
-  resave: false,
-  saveUninitialized: true,
+  secret: constants.compute.express.session.SECRET,
+  resave: constants.compute.express.session.RESAVE,
+  saveUninitialized: constants.compute.express.session.SAVE_UNINITIALIZED,
   cookie: {
-    secure: false,
-    httpOnly: true,
-    maxAge: 600000
+    secure: constants.compute.express.session.cookie.SECURE,
+    httpOnly: constants.compute.express.session.cookie.HTTP_ONLY,
+    maxAge: constants.compute.express.session.cookie.MAX_AGE
   }
 }));
 
-const port = 42000;
-const socket = 42420;
+const port = constants.net.HTTP_PORT;
+const socket = constants.net.SOCKET_PORT;
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', constants.compute.express.VIEW_ENGINE);
+app.set('views', path.join(__dirname, constants.compute.express.VIEWS_DIR));
 
 app.use('/', routes);
 
@@ -113,8 +117,8 @@ app.use((err, req, res, next) => {
   }
 });
 
-const memoryThreshold = 50000000; // 50 MB
-const cpuThreshold = 80; // 80% CPU usage
+const memoryThreshold = constants.compute.MEM_THRESH;;
+const cpuThreshold = constants.compute.CPU_THRESH;
 
 setInterval(() => {
   const memory = process.memoryUsage().heapUsed;

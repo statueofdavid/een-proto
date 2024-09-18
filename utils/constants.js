@@ -18,15 +18,15 @@ const constants = {
     MEM_THRESH: 50000000,
     express: {
       VIEW_ENGINE: "ejs",
-      VIEWS_DIR: "views",
+      VIEWS_DIR: "./views",
       URLENCODED_EXTENDED: true,
       session: {
         SECRET: "my-super-strong-secret-key",
 	RESAVE: false,
-	SAVE_UNINITIALIZED: true,
+	SAVE_UNINTIALIZED: "false",
 	cookie: {
-          SECURE: false,
-          HTTP_ONLY: true,
+          SECURE: "false",
+          HTTP_ONLY: "true",
           MAX_AGE: 600000
 	}
       }
@@ -46,4 +46,4 @@ const constants = {
   }
 }
 
-module.export = constants;
+module.exports = constants;
